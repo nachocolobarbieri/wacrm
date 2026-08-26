@@ -50,6 +50,12 @@ COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 
+# Next's standalone output tracing drops the ESM half of @swc/helpers
+# (only the .cjs files it can see statically get copied), so the app
+# crashes at boot with "Cannot find module .../@swc/helpers/esm/...".
+# Overlay the full package from the untraced builder node_modules.
+COPY --from=builder --chown=nextjs:nextjs /app/node_modules/@swc/helpers ./node_modules/@swc/helpers
+
 USER nextjs
 EXPOSE 3000
 CMD ["node", "server.js"]

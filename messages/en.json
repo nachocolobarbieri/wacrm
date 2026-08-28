@@ -1538,6 +1538,41 @@
       "step4_5": "Subscribe to \"messages\" webhook field",
       "metaDocs": "Meta WhatsApp API Documentation"
     },
+    "channels": {
+      "title": "Social networks",
+      "description": "Connect WhatsApp, Instagram, and Facebook through Zernio. WhatsApp connects in coexistence mode — the number stays usable in the WhatsApp Business app.",
+      "loading": "Loading connected accounts...",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "connectedAs": "Connected as {username}",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting...",
+      "disconnectConfirmTitle": "Disconnect {name}?",
+      "disconnectConfirmDesc": "wacrm will stop sending and receiving messages on this account. You can reconnect it later.",
+      "cancel": "Cancel",
+      "toastDisconnected": "{name} disconnected",
+      "toastDisconnectFailed": "Couldn't disconnect: {error}",
+      "toastConnected": "{name} connected",
+      "whatsapp": {
+        "name": "WhatsApp",
+        "description": "Coexistence mode — keeps working in the WhatsApp Business app on your phone."
+      },
+      "instagram": {
+        "name": "Instagram",
+        "description": "Direct messages from your Instagram professional account."
+      },
+      "facebook": {
+        "name": "Facebook",
+        "description": "Messenger conversations from your Facebook Page."
+      },
+      "errors": {
+        "connect_failed": "Couldn't complete the connection. Try again.",
+        "no_account": "Your profile is not linked to an account.",
+        "save_failed": "The account connected but saving it failed. Try again.",
+        "multiple_numbers_not_supported": "This WhatsApp Business Account has more than one phone number — picking a specific one isn't supported yet. Contact support."
+      }
+    },
     "sections": {
       "overview": "Overview",
       "profile": "Your profile",
@@ -1549,7 +1584,8 @@
       "fields": "Fields & tags",
       "deals": "Deals & currency",
       "members": "Team members",
-      "api": "API keys"
+      "api": "API keys",
+      "channels": "Social networks"
     },
     "groups": {
       "account": "Account",

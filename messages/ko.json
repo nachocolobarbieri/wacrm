@@ -1538,6 +1538,41 @@
       "step4_5": "\"messages\" 웹훅 필드를 구독",
       "metaDocs": "Meta WhatsApp API 문서"
     },
+    "channels": {
+      "title": "소셜 네트워크",
+      "description": "Zernio를 통해 WhatsApp, Instagram, Facebook을 연결하세요. WhatsApp은 공존 모드로 연결됩니다 — 번호는 WhatsApp Business 앱에서 계속 사용할 수 있습니다.",
+      "loading": "연결된 계정을 불러오는 중...",
+      "connected": "연결됨",
+      "notConnected": "연결되지 않음",
+      "connectedAs": "연결된 계정: {username}",
+      "connect": "연결",
+      "disconnect": "연결 해제",
+      "disconnecting": "연결 해제 중...",
+      "disconnectConfirmTitle": "{name} 연결을 해제하시겠습니까?",
+      "disconnectConfirmDesc": "wacrm이 이 계정에서 메시지를 주고받는 것을 중단합니다. 나중에 다시 연결할 수 있습니다.",
+      "cancel": "취소",
+      "toastDisconnected": "{name} 연결이 해제되었습니다",
+      "toastDisconnectFailed": "연결 해제 실패: {error}",
+      "toastConnected": "{name} 연결됨",
+      "whatsapp": {
+        "name": "WhatsApp",
+        "description": "공존 모드 — 휴대폰의 WhatsApp Business 앱에서 계속 사용할 수 있습니다."
+      },
+      "instagram": {
+        "name": "Instagram",
+        "description": "Instagram 프로페셔널 계정의 다이렉트 메시지."
+      },
+      "facebook": {
+        "name": "Facebook",
+        "description": "Facebook 페이지의 Messenger 대화."
+      },
+      "errors": {
+        "connect_failed": "연결을 완료할 수 없습니다. 다시 시도하세요.",
+        "no_account": "프로필이 계정에 연결되어 있지 않습니다.",
+        "save_failed": "계정은 연결되었지만 저장에 실패했습니다. 다시 시도하세요.",
+        "multiple_numbers_not_supported": "이 WhatsApp Business 계정에는 전화번호가 두 개 이상 있습니다 — 특정 번호를 선택하는 기능은 아직 지원되지 않습니다. 지원팀에 문의하세요."
+      }
+    },
     "sections": {
       "overview": "개요",
       "profile": "내 프로필",
@@ -1549,7 +1584,8 @@
       "fields": "필드 & 태그",
       "deals": "딜 & 통화",
       "members": "팀원",
-      "api": "API 키"
+      "api": "API 키",
+      "channels": "소셜 네트워크"
     },
     "groups": {
       "account": "계정",

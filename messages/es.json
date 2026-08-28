@@ -1538,6 +1538,41 @@
       "step4_5": "Suscríbete al campo de webhook \"messages\"",
       "metaDocs": "Documentación de la API de WhatsApp de Meta"
     },
+    "channels": {
+      "title": "Redes sociales",
+      "description": "Conectá WhatsApp, Instagram y Facebook a través de Zernio. WhatsApp se conecta en modo coexistencia — el número sigue funcionando en la app de WhatsApp Business.",
+      "loading": "Cargando cuentas conectadas...",
+      "connected": "Conectado",
+      "notConnected": "No conectado",
+      "connectedAs": "Conectado como {username}",
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "disconnecting": "Desconectando...",
+      "disconnectConfirmTitle": "¿Desconectar {name}?",
+      "disconnectConfirmDesc": "wacrm dejará de enviar y recibir mensajes en esta cuenta. Podés volver a conectarla más adelante.",
+      "cancel": "Cancelar",
+      "toastDisconnected": "{name} desconectado",
+      "toastDisconnectFailed": "No se pudo desconectar: {error}",
+      "toastConnected": "{name} conectado",
+      "whatsapp": {
+        "name": "WhatsApp",
+        "description": "Modo coexistencia — sigue funcionando en la app de WhatsApp Business de tu celular."
+      },
+      "instagram": {
+        "name": "Instagram",
+        "description": "Mensajes directos de tu cuenta profesional de Instagram."
+      },
+      "facebook": {
+        "name": "Facebook",
+        "description": "Conversaciones de Messenger de tu página de Facebook."
+      },
+      "errors": {
+        "connect_failed": "No se pudo completar la conexión. Probá de nuevo.",
+        "no_account": "Tu perfil no está vinculado a una cuenta.",
+        "save_failed": "La cuenta se conectó pero no se pudo guardar. Probá de nuevo.",
+        "multiple_numbers_not_supported": "Esta cuenta de WhatsApp Business tiene más de un número de teléfono — elegir uno específico todavía no está soportado. Contactá a soporte."
+      }
+    },
     "sections": {
       "overview": "Resumen",
       "profile": "Tu perfil",
@@ -1549,7 +1584,8 @@
       "fields": "Campos y etiquetas",
       "deals": "Negocios y moneda",
       "members": "Miembros del equipo",
-      "api": "Claves de API"
+      "api": "Claves de API",
+      "channels": "Redes sociales"
     },
     "groups": {
       "account": "Cuenta",

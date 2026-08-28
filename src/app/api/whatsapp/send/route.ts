@@ -11,6 +11,10 @@ import {
   validateSendMessageParams,
   SendMessageError,
 } from '@/lib/whatsapp/send-message'
+import {
+  sendZernioMessageToConversation,
+  ZernioSendError,
+} from '@/lib/zernio/deliver'
 
 // The dashboard's outbound-send endpoint. It owns auth, per-user rate
 // limiting, and the two ways the UI targets a thread — an existing
@@ -146,6 +150,41 @@ export async function POST(request: Request) {
         { error: 'Conversation not found' },
         { status: 404 }
       )
+    }
+
+    // Instagram/Facebook (and coexistence WhatsApp connected through
+    // Zernio) route through a separate send core — see
+    // src/lib/zernio/deliver.ts for why it's a parallel path rather
+    // than a branch inside sendMessageToConversation.
+    const { data: providerRow } = await supabase
+      .from('conversations')
+      .select('provider')
+      .eq('id', conversationId)
+      .single()
+
+    if (providerRow?.provider === 'zernio') {
+      try {
+        const result = await sendZernioMessageToConversation(
+          supabase,
+          accountId,
+          {
+            conversationId,
+            messageType: message_type,
+            contentText: content_text,
+            mediaUrl: media_url,
+            replyToMessageId: reply_to_message_id,
+          },
+        )
+        return NextResponse.json({
+          success: true,
+          message_id: result.messageId,
+        })
+      } catch (err) {
+        if (err instanceof ZernioSendError) {
+          return NextResponse.json({ error: err.message }, { status: err.status })
+        }
+        throw err
+      }
     }
 
     // Delegate to the shared send core (validates, sends to Meta with

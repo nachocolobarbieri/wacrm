@@ -22,7 +22,8 @@ export interface ApiConversation {
   updated_at: string;
   contact: {
     id: string;
-    phone: string;
+    /** Null for a contact whose only identity is Instagram/Facebook. */
+    phone: string | null;
     name: string | null;
     email: string | null;
     company: string | null;

@@ -123,13 +123,13 @@ async function handleMessageReceived(
   db: any,
   payload: ZernioWebhookPayloadMessage,
 ) {
-  const { message, account } = payload
+  const { message, account, conversation: webhookConversation } = payload
   const channel = account.platform as 'whatsapp' | 'instagram' | 'facebook'
   const zernioAccountId = account.accountId ?? account.id
 
   const { data: channelAccount } = await db
     .from('channel_accounts')
-    .select('account_id')
+    .select('id, account_id')
     .eq('external_id', zernioAccountId)
     .maybeSingle()
 
@@ -190,6 +190,8 @@ async function handleMessageReceived(
         contact_id: contactId,
         channel,
         provider: 'zernio',
+        channel_account_id: channelAccount.id,
+        external_conversation_id: webhookConversation.id,
         last_message_text: message.text,
         last_message_at: message.sentAt,
         updated_at: new Date().toISOString(),

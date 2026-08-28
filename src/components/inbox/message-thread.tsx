@@ -7,6 +7,7 @@ import { usePresence } from "@/hooks/use-presence";
 import { PresenceDot } from "@/components/presence/presence-dot";
 import { presenceLabel } from "@/lib/presence";
 import { cn } from "@/lib/utils";
+import { ChannelBadge } from "@/components/icons/channel-icons";
 import type {
   Conversation,
   Message,
@@ -231,7 +232,15 @@ export function MessageThread({
     };
   }, []);
 
-  // 24-hour session timer
+  // Customer-service session window. Meta's WhatsApp Cloud API caps
+  // free-form replies at 24h (an approved template is required after
+  // that); Instagram DM and Facebook Messenger instead allow free text
+  // for 7 days under the human-agent tag. Zernio-connected conversations
+  // never reach the template path (src/lib/zernio/deliver.ts doesn't
+  // support it), so treating them as WhatsApp's 24h window would just
+  // lock the composer with no way out — use the channel's real window.
+  const sessionWindowHours =
+    !conversation?.channel || conversation.channel === "whatsapp" ? 24 : 24 * 7;
   const sessionInfo = useMemo(() => {
     if (!messages.length) return { expired: false, remaining: "" };
 
@@ -243,20 +252,20 @@ export function MessageThread({
     if (!lastCustomerMsg) return { expired: true, remaining: "No customer messages" };
 
     const hoursSince = differenceInHours(new Date(), new Date(lastCustomerMsg.created_at));
-    const expired = hoursSince >= 24;
+    const expired = hoursSince >= sessionWindowHours;
 
     if (expired) {
       return { expired: true, remaining: tTimer("expired") };
     }
 
-    const hoursLeft = 24 - hoursSince;
+    const hoursLeft = sessionWindowHours - hoursSince;
     const remaining =
       hoursLeft >= 1
         ? tTimer("xhRemaining", { hours: Math.floor(hoursLeft) })
         : tTimer("xmRemaining", { minutes: Math.floor(hoursLeft * 60) });
 
     return { expired, remaining };
-  }, [messages, tTimer]);
+  }, [messages, tTimer, sessionWindowHours]);
 
   // Store latest callback in a ref so fetchMessages doesn't need to
   // depend on `onMessagesLoaded` — otherwise parent re-renders cause
@@ -879,7 +888,7 @@ export function MessageThread({
     );
   }
 
-  const displayName = contact.name || contact.phone;
+  const displayName = contact.name || contact.phone || contact.id;
   const messageGroups = groupMessagesByDate(messages);
   const currentStatus = STATUS_OPTIONS.find(
     (s) => s.value === conversation.status
@@ -916,8 +925,14 @@ export function MessageThread({
               <ArrowLeft className="h-5 w-5" />
             </button>
           )}
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium text-foreground">
-            {displayName.charAt(0).toUpperCase()}
+          <div className="relative flex-shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-medium text-foreground">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <ChannelBadge
+              channel={conversation.channel}
+              className="absolute -right-0.5 -bottom-0.5 ring-2 ring-card"
+            />
           </div>
           <div className="min-w-0">
             <h2 className="truncate text-sm font-semibold text-foreground">{displayName}</h2>

@@ -1555,6 +1555,10 @@
       "toastDisconnected": "{name} disconnected",
       "toastDisconnectFailed": "Couldn't disconnect: {error}",
       "toastConnected": "{name} connected",
+      "sync": "Sync",
+      "syncing": "Syncing...",
+      "toastSynced": "{count, plural, =0 {No new accounts found} =1 {1 account imported} other {# accounts imported}}",
+      "toastSyncFailed": "Couldn't sync: {error}",
       "whatsapp": {
         "name": "WhatsApp",
         "description": "Coexistence mode — keeps working in the WhatsApp Business app on your phone."

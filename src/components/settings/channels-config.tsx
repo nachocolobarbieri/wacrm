@@ -38,6 +38,7 @@ export function ChannelsConfig() {
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState<ChannelAccount[]>([]);
   const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -83,9 +84,42 @@ export function ChannelsConfig() {
     }
   }
 
+  async function handleSync() {
+    setSyncing(true);
+    try {
+      const res = await fetch('/api/zernio/accounts/sync', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(t('toastSyncFailed', { error: data.error ?? 'unknown' }));
+        return;
+      }
+      toast.success(t('toastSynced', { count: data.imported ?? 0 }));
+      await load();
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   return (
     <div>
-      <SettingsPanelHead title={t('title')} description={t('description')} />
+      <SettingsPanelHead
+        title={t('title')}
+        description={t('description')}
+        action={
+          canEditSettings ? (
+            <Button variant="outline" size="sm" disabled={syncing} onClick={handleSync}>
+              {syncing ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  {t('syncing')}
+                </>
+              ) : (
+                t('sync')
+              )}
+            </Button>
+          ) : undefined
+        }
+      />
 
       {loading ? (
         <p className="text-sm text-muted-foreground">{t('loading')}</p>

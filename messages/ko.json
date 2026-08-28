@@ -1555,6 +1555,10 @@
       "toastDisconnected": "{name} 연결이 해제되었습니다",
       "toastDisconnectFailed": "연결 해제 실패: {error}",
       "toastConnected": "{name} 연결됨",
+      "sync": "동기화",
+      "syncing": "동기화 중...",
+      "toastSynced": "{count, plural, =0 {새 계정을 찾지 못했습니다} other {계정 #개를 가져왔습니다}}",
+      "toastSyncFailed": "동기화하지 못했습니다: {error}",
       "whatsapp": {
         "name": "WhatsApp",
         "description": "공존 모드 — 휴대폰의 WhatsApp Business 앱에서 계속 사용할 수 있습니다."

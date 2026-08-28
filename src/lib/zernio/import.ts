@@ -39,9 +39,15 @@ export interface ImportSummary {
 export async function importZernioAccountHistory(
   db: Db,
   accountId: string,
-  channelAccount: { id: string; external_id: string; channel: ZernioChannel },
+  channelAccount: {
+    id: string
+    external_id: string
+    channel: ZernioChannel
+    created_by: string
+  },
 ): Promise<ImportSummary> {
   const summary: ImportSummary = { conversations: 0, messages: 0 }
+  const userId = channelAccount.created_by
 
   let cursor: string | undefined
   do {
@@ -55,6 +61,7 @@ export async function importZernioAccountHistory(
       const contactId = await resolveContact(
         db,
         accountId,
+        userId,
         channelAccount.channel,
         conv.participantId,
         conv.participantName ?? null,
@@ -66,6 +73,7 @@ export async function importZernioAccountHistory(
         .upsert(
           {
             account_id: accountId,
+            user_id: userId,
             contact_id: contactId,
             channel: channelAccount.channel,
             provider: 'zernio',
@@ -81,7 +89,10 @@ export async function importZernioAccountHistory(
         .select('id')
         .single()
 
-      if (convError || !conversation) continue
+      if (convError || !conversation) {
+        console.error('[zernio import] conversation upsert failed:', convError?.message)
+        continue
+      }
       summary.conversations++
 
       summary.messages += await importMessages(
@@ -149,6 +160,7 @@ async function importMessages(
 async function resolveContact(
   db: Db,
   accountId: string,
+  userId: string,
   channel: ZernioChannel,
   externalId: string,
   name: string | null,
@@ -166,13 +178,17 @@ async function resolveContact(
     .from('contacts')
     .insert({
       account_id: accountId,
+      user_id: userId,
       phone: null,
       name: name ?? externalId,
     })
     .select('id')
     .single()
 
-  if (contactError || !newContact) return null
+  if (contactError || !newContact) {
+    console.error('[zernio import] contact insert failed:', contactError?.message)
+    return null
+  }
 
   await db.from('contact_identities').insert({
     account_id: accountId,

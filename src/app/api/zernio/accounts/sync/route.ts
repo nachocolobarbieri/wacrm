@@ -82,7 +82,7 @@ export async function POST() {
         },
         { onConflict: 'external_id' },
       )
-      .select('id, external_id, channel')
+      .select('id, external_id, channel, created_by')
       .single()
 
     if (upsertError || !channelAccount) continue

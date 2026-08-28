@@ -129,7 +129,7 @@ async function handleMessageReceived(
 
   const { data: channelAccount } = await db
     .from('channel_accounts')
-    .select('id, account_id')
+    .select('id, account_id, created_by')
     .eq('external_id', zernioAccountId)
     .maybeSingle()
 
@@ -139,6 +139,12 @@ async function handleMessageReceived(
     return
   }
   const accountId = channelAccount.account_id as string
+  // contacts.user_id / conversations.user_id are NOT NULL (original
+  // schema, predates multi-user account_id) — there's no "acting
+  // user" for a webhook, so this attributes auto-created rows to
+  // whoever connected the channel, same as the Meta webhook's
+  // configOwnerUserId.
+  const userId = channelAccount.created_by as string
 
   // Outgoing messages (sent from Zernio's own inbox UI, or mirrored
   // from the WhatsApp Business app on a coexistence number) aren't
@@ -162,6 +168,7 @@ async function handleMessageReceived(
       .from('contacts')
       .insert({
         account_id: accountId,
+        user_id: userId,
         phone: message.sender.phoneNumber ?? null,
         name: message.sender.name ?? message.sender.username ?? senderId,
       })
@@ -187,6 +194,7 @@ async function handleMessageReceived(
     .upsert(
       {
         account_id: accountId,
+        user_id: userId,
         contact_id: contactId,
         channel,
         provider: 'zernio',

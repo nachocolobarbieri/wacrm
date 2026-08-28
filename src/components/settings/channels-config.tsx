@@ -93,7 +93,12 @@ export function ChannelsConfig() {
         toast.error(t('toastSyncFailed', { error: data.error ?? 'unknown' }));
         return;
       }
-      toast.success(t('toastSynced', { count: data.imported ?? 0 }));
+      toast.success(
+        t('toastSynced', {
+          accounts: data.imported ?? 0,
+          messages: data.messages ?? 0,
+        }),
+      );
       await load();
     } finally {
       setSyncing(false);

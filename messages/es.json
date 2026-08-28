@@ -1557,7 +1557,7 @@
       "toastConnected": "{name} conectado",
       "sync": "Sincronizar",
       "syncing": "Sincronizando...",
-      "toastSynced": "{count, plural, =0 {No se encontraron cuentas nuevas} =1 {1 cuenta importada} other {# cuentas importadas}}",
+      "toastSynced": "Sincronizadas {accounts, plural, =0 {0 cuentas} =1 {1 cuenta} other {# cuentas}} — {messages, plural, =0 {sin mensajes nuevos} =1 {1 mensaje importado} other {# mensajes importados}}",
       "toastSyncFailed": "No se pudo sincronizar: {error}",
       "whatsapp": {
         "name": "WhatsApp",

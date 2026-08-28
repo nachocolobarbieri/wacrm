@@ -42,18 +42,53 @@ export interface ZernioSendMessageResponse {
 }
 
 // ---- GET /v1/inbox/conversations -----------------------------------
+// Field names here do NOT match the webhook envelope on purpose — see
+// ZernioWebhookMessage below and the OpenAPI spec's own note on it.
 
 export interface ZernioConversationSummary {
   id: string
+  platform: string
   accountId: string
-  platform: ZernioChannel
+  accountUsername?: string
   participantId: string
   participantName?: string
-  participantUsername?: string
-  participantPicture?: string
+  participantPicture?: string | null
   lastMessage?: string
-  lastMessageAt?: string
-  unreadCount?: number
+  updatedTime: string
+  status: 'active' | 'archived'
+  unreadCount?: number | null
+}
+
+export interface ZernioListConversationsResponse {
+  data: ZernioConversationSummary[]
+  pagination: { hasMore: boolean; nextCursor: string | null }
+}
+
+// ---- GET /v1/inbox/conversations/{conversationId}/messages --------
+
+export interface ZernioListedMessageAttachment {
+  id: string
+  type: 'image' | 'video' | 'audio' | 'file' | 'sticker' | 'share'
+  url: string
+  refreshUrl?: string | null
+}
+
+export interface ZernioListedMessage {
+  id: string
+  conversationId: string
+  accountId: string
+  platform: string
+  message: string
+  senderId: string
+  senderName?: string | null
+  direction: 'incoming' | 'outgoing'
+  createdAt: string
+  attachments: ZernioListedMessageAttachment[]
+}
+
+export interface ZernioListMessagesResponse {
+  messages: ZernioListedMessage[]
+  pagination: { hasMore: boolean; nextCursor: string | null }
 }
 
 // ---- Webhook envelope (POST to our /api/webhooks/zernio) ----------

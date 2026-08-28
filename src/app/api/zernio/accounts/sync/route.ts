@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { getDefaultZernioProfileId } from '@/lib/zernio/connect'
 import { listZernioAccounts, KNOWN_CHANNELS } from '@/lib/zernio/accounts'
+import { importZernioAccountHistory } from '@/lib/zernio/import'
 import type { ZernioChannel } from '@/lib/zernio/types'
 
 function isKnownChannel(platform: string): platform is ZernioChannel {
@@ -57,28 +58,47 @@ export async function POST() {
 
   const db = supabaseAdmin()
   let imported = 0
+  let conversations = 0
+  let messages = 0
 
   for (const account of listResult.data.accounts) {
     if (!isKnownChannel(account.platform)) continue
     if (!account.isActive) continue
 
-    const { error: upsertError } = await db.from('channel_accounts').upsert(
-      {
-        account_id: profile.account_id,
-        created_by: user.id,
-        channel: account.platform,
-        provider: 'zernio',
-        external_id: account._id,
-        profile_id: profileResult.profileId,
-        username: account.username ?? null,
-        display_name: account.displayName ?? null,
-        is_active: true,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'external_id' },
+    const { data: channelAccount, error: upsertError } = await db
+      .from('channel_accounts')
+      .upsert(
+        {
+          account_id: profile.account_id,
+          created_by: user.id,
+          channel: account.platform,
+          provider: 'zernio',
+          external_id: account._id,
+          profile_id: profileResult.profileId,
+          username: account.username ?? null,
+          display_name: account.displayName ?? null,
+          is_active: true,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'external_id' },
+      )
+      .select('id, external_id, channel')
+      .single()
+
+    if (upsertError || !channelAccount) continue
+    imported++
+
+    // Pull whatever conversation/message history Zernio already
+    // replayed for this account — see src/lib/zernio/import.ts for
+    // why this doesn't arrive via webhook and is safe to re-run.
+    const summary = await importZernioAccountHistory(
+      db,
+      profile.account_id,
+      channelAccount,
     )
-    if (!upsertError) imported++
+    conversations += summary.conversations
+    messages += summary.messages
   }
 
-  return NextResponse.json({ ok: true, imported })
+  return NextResponse.json({ ok: true, imported, conversations, messages })
 }

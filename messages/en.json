@@ -144,6 +144,7 @@
       "filterPending": "Pending",
       "filterClosed": "Closed",
       "tags": "Tags",
+      "channels": "Channels",
       "company": "Company",
       "allCompanies": "All companies",
       "clearAll": "Clear all",
@@ -1565,6 +1566,10 @@
       "facebook": {
         "name": "Facebook",
         "description": "Messenger conversations from your Facebook Page."
+      },
+      "telegram": {
+        "name": "Telegram",
+        "description": "Messages sent to your Telegram bot."
       },
       "errors": {
         "connect_failed": "Couldn't complete the connection. Try again.",

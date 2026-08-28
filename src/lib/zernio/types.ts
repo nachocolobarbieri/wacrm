@@ -3,7 +3,7 @@
 // names on purpose: the REST response for an account and the webhook
 // envelope's `account` object are genuinely different shapes.
 
-export type ZernioChannel = 'whatsapp' | 'instagram' | 'facebook'
+export type ZernioChannel = 'whatsapp' | 'instagram' | 'facebook' | 'telegram'
 
 // ---- GET /v1/connect/{platform} ----------------------------------
 
@@ -101,7 +101,7 @@ export interface ZernioWebhookMessageSender {
 export interface ZernioWebhookMessage {
   id: string
   conversationId: string
-  platform: ZernioChannel | 'telegram' | 'sms'
+  platform: ZernioChannel | 'sms'
   platformMessageId: string
   direction: 'incoming' | 'outgoing'
   text: string | null

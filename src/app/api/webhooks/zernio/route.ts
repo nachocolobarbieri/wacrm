@@ -124,7 +124,7 @@ async function handleMessageReceived(
   payload: ZernioWebhookPayloadMessage,
 ) {
   const { message, account, conversation: webhookConversation } = payload
-  const channel = account.platform as 'whatsapp' | 'instagram' | 'facebook'
+  const channel = account.platform as 'whatsapp' | 'instagram' | 'facebook' | 'telegram'
   const zernioAccountId = account.accountId ?? account.id
 
   const { data: channelAccount } = await db

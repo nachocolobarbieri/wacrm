@@ -28,7 +28,15 @@ export function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export type ChannelId = 'whatsapp' | 'instagram' | 'facebook';
+export function TelegramIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M21.5 4.5 2.7 11.8c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.6-1.7Zm-3.3 3.4L9.9 14.6l-.3 3.1-1.4-4.4 9.9-6.3c.5-.3.9-.1.6.3Z" />
+    </svg>
+  );
+}
+
+export type ChannelId = 'whatsapp' | 'instagram' | 'facebook' | 'telegram';
 
 export const CHANNEL_ICONS: Record<
   ChannelId,
@@ -37,12 +45,14 @@ export const CHANNEL_ICONS: Record<
   whatsapp: WhatsAppIcon,
   instagram: InstagramIcon,
   facebook: FacebookIcon,
+  telegram: TelegramIcon,
 };
 
 export const CHANNEL_COLORS: Record<ChannelId, string> = {
   whatsapp: 'text-green-600 bg-green-50 dark:bg-green-950',
   instagram: 'text-pink-600 bg-pink-50 dark:bg-pink-950',
   facebook: 'text-blue-600 bg-blue-50 dark:bg-blue-950',
+  telegram: 'text-sky-600 bg-sky-50 dark:bg-sky-950',
 };
 
 /** Small round channel badge — used on conversation rows and headers. */

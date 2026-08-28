@@ -8,7 +8,7 @@ import {
   normalizeConversations,
 } from "@/lib/inbox/conversations";
 import { cn } from "@/lib/utils";
-import { ChannelBadge } from "@/components/icons/channel-icons";
+import { ChannelBadge, CHANNEL_ICONS, type ChannelId } from "@/components/icons/channel-icons";
 import type { Conversation, ConversationStatus, Tag } from "@/types";
 import { Search, ChevronDown, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -47,6 +47,8 @@ const STATUS_COLORS: Record<ConversationStatus, string> = {
 
 type InboxFilter = ConversationStatus | "all" | "unread";
 
+const ALL_CHANNELS: ChannelId[] = ["whatsapp", "instagram", "facebook", "telegram"];
+
 export function ConversationList({
   activeConversationId,
   onSelect,
@@ -55,7 +57,8 @@ export function ConversationList({
   resyncToken = 0,
 }: ConversationListProps) {
   const t = useTranslations("Inbox.conversationList");
-  
+  const tChannels = useTranslations("Settings.channels");
+
   const FILTER_OPTIONS: { label: string; value: InboxFilter }[] = useMemo(() => [
     { label: t("filterAll"), value: "all" },
     { label: t("filterUnread"), value: "unread" },
@@ -73,6 +76,8 @@ export function ConversationList({
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  // Empty = show every channel, same convention as selectedTagIds.
+  const [selectedChannels, setSelectedChannels] = useState<ChannelId[]>([]);
 
   // Keep the latest callback in a ref so the fetch effect below can
   // have a stable, empty-dep identity. Previously the fetch useCallback
@@ -178,6 +183,14 @@ export function ConversationList({
       );
     }
 
+    // Channel filter (OR logic, same convention as tags). A row with no
+    // `channel` predates migration 040 and is always WhatsApp.
+    if (selectedChannels.length > 0) {
+      result = result.filter((c) =>
+        selectedChannels.includes(c.channel ?? "whatsapp")
+      );
+    }
+
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter((c) => {
@@ -189,7 +202,7 @@ export function ConversationList({
     }
 
     return result;
-  }, [conversations, filter, search, selectedTagIds, selectedCompany]);
+  }, [conversations, filter, search, selectedTagIds, selectedCompany, selectedChannels]);
 
   const toggleTag = useCallback((id: string) => {
     setSelectedTagIds((prev) =>
@@ -197,12 +210,22 @@ export function ConversationList({
     );
   }, []);
 
+  const toggleChannel = useCallback((id: ChannelId) => {
+    setSelectedChannels((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  }, []);
+
   const clearContactFilters = useCallback(() => {
     setSelectedTagIds([]);
     setSelectedCompany(null);
+    setSelectedChannels([]);
   }, []);
 
-  const hasContactFilters = selectedTagIds.length > 0 || selectedCompany !== null;
+  const hasContactFilters =
+    selectedTagIds.length > 0 ||
+    selectedCompany !== null ||
+    selectedChannels.length > 0;
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -306,6 +329,43 @@ export function ConversationList({
             </DropdownMenu>
           )}
 
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                "inline-flex items-center justify-center h-7 gap-1 px-2 text-xs rounded-md hover:bg-muted",
+                selectedChannels.length > 0
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {t("channels")}
+              {selectedChannels.length > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                  {selectedChannels.length}
+                </span>
+              )}
+              <ChevronDown className="h-3 w-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48 border-border bg-popover">
+              {ALL_CHANNELS.map((id) => {
+                const Icon = CHANNEL_ICONS[id];
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={id}
+                    checked={selectedChannels.includes(id)}
+                    onCheckedChange={() => toggleChannel(id)}
+                    className="text-sm text-popover-foreground"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Icon className="size-3.5 shrink-0 text-muted-foreground" />
+                      <span className="truncate">{tChannels(`${id}.name`)}</span>
+                    </span>
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {companies.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -381,6 +441,16 @@ export function ConversationList({
                 <X className="h-3 w-3" />
               </button>
             )}
+            {selectedChannels.map((id) => (
+              <button
+                key={id}
+                onClick={() => toggleChannel(id)}
+                className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] text-foreground hover:bg-muted/70"
+              >
+                <span className="max-w-24 truncate">{tChannels(`${id}.name`)}</span>
+                <X className="h-3 w-3" />
+              </button>
+            ))}
             <button
               onClick={clearContactFilters}
               className="px-1 text-[11px] text-muted-foreground hover:text-foreground"

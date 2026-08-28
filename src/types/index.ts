@@ -192,7 +192,7 @@ export interface Conversation {
    * predates Zernio — the direct-Meta WhatsApp integration never sets
    * these explicitly and keeps working exactly as before.
    */
-  channel?: 'whatsapp' | 'instagram' | 'facebook';
+  channel?: 'whatsapp' | 'instagram' | 'facebook' | 'telegram';
   provider?: 'meta' | 'zernio';
   channel_account_id?: string | null;
   external_conversation_id?: string | null;

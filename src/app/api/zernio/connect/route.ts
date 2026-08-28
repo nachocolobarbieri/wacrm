@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getDefaultZernioProfileId, getZernioConnectUrl } from '@/lib/zernio/connect'
 import type { ZernioChannel } from '@/lib/zernio/types'
 
-const VALID_CHANNELS: ZernioChannel[] = ['whatsapp', 'instagram', 'facebook']
+const VALID_CHANNELS: ZernioChannel[] = ['whatsapp', 'instagram', 'facebook', 'telegram']
 
 /**
  * GET /api/zernio/connect?channel=whatsapp

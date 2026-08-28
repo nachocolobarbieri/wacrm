@@ -144,6 +144,7 @@
       "filterPending": "대기 중",
       "filterClosed": "닫힘",
       "tags": "태그",
+      "channels": "채널",
       "company": "회사",
       "allCompanies": "전체 회사",
       "clearAll": "모두 지우기",
@@ -1565,6 +1566,10 @@
       "facebook": {
         "name": "Facebook",
         "description": "Facebook 페이지의 Messenger 대화."
+      },
+      "telegram": {
+        "name": "Telegram",
+        "description": "Telegram 봇으로 전송된 메시지."
       },
       "errors": {
         "connect_failed": "연결을 완료할 수 없습니다. 다시 시도하세요.",

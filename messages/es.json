@@ -144,6 +144,7 @@
       "filterPending": "Pendientes",
       "filterClosed": "Cerradas",
       "tags": "Etiquetas",
+      "channels": "Canales",
       "company": "Empresa",
       "allCompanies": "Todas las empresas",
       "clearAll": "Borrar todo",
@@ -1565,6 +1566,10 @@
       "facebook": {
         "name": "Facebook",
         "description": "Conversaciones de Messenger de tu página de Facebook."
+      },
+      "telegram": {
+        "name": "Telegram",
+        "description": "Mensajes enviados a tu bot de Telegram."
       },
       "errors": {
         "connect_failed": "No se pudo completar la conexión. Probá de nuevo.",

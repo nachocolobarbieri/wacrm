@@ -18,6 +18,7 @@ const CHANNELS: { id: Channel; Icon: (typeof CHANNEL_ICONS)[Channel] }[] = [
   { id: 'whatsapp', Icon: CHANNEL_ICONS.whatsapp },
   { id: 'instagram', Icon: CHANNEL_ICONS.instagram },
   { id: 'facebook', Icon: CHANNEL_ICONS.facebook },
+  { id: 'telegram', Icon: CHANNEL_ICONS.telegram },
 ];
 
 interface ChannelAccount {
